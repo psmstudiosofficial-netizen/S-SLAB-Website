@@ -1,0 +1,515 @@
+/*
+ * Custom Styles for SLAB E-commerce
+ * File: assets/css/shop.css
+ */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Utility classes */
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+/* Top Bar */
+.top-bar {
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem 0;
+}
+
+.top-bar p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Navbar */
+.navbar {
+    padding: 1rem 0;
+    background-color: #000;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+    color: #fff !important;
+    margin-left: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ccc !important;
+}
+
+.navbar-nav .nav-link .bi {
+    font-size: 1.2rem;
+}
+
+.navbar-nav .nav-link .badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: #000;
+    color: #fff;
+    padding: 5rem 0;
+}
+
+.hero-content h6 {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.hero-content h3 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero-bg {
+    height: 400px;
+    background-image: url('../imgs of cloths/WhatsApp Image 2026-06-02 at 10.11.41 AM.jpeg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.btn-outline-light {
+    border-color: #fff;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Features Section */
+.features-section {
+    background-color: #f8f9fa;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: #000;
+    margin-bottom: 1rem;
+}
+
+.features-section h5 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.features-section p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Category Section */
+.category-section .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.category-img {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-img {
+    transform: scale(1.1);
+}
+
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.category-card:hover .category-overlay {
+    opacity: 1;
+}
+
+.category-overlay h5 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.category-overlay .btn-outline-light {
+    border-color: #fff;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.5rem;
+}
+
+.category-overlay .btn-outline-light:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Trending Products Section */
+.trending-section .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.product-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.product-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+}
+
+.product-info {
+    flex-grow: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #000;
+    flex-grow: 1;
+}
+
+.price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 1.5rem;
+}
+
+.product-card .btn-outline-dark {
+    border-color: #000;
+    color: #000;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.product-card .btn-outline-dark:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* Promotional Banner Section */
+.promo-section .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.promo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promo-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.promo-img {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+}
+
+.promo-card:hover .promo-img {
+    transform: scale(1.1);
+}
+
+.promo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.promo-card:hover .promo-overlay {
+    opacity: 1;
+}
+
+.promo-overlay h5 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.promo-overlay .btn-outline-light {
+    border-color: #fff;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.5rem;
+}
+
+.promo-overlay .btn-outline-light:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Instagram Gallery */
+.instagram-section .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.instagram-gallery {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.instagram-item {
+    flex: 0 0 250px;
+    height: 250px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.instagram-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.instagram-item img:hover {
+    transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+    background-color: #000;
+    color: #fff;
+    padding: 3rem 0 1.5rem;
+}
+
+.footer h5 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+.footer ul {
+    list-style: none;
+}
+
+.footer ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer ul li a:hover {
+    color: #fff;
+}
+
+.footer .input-group {
+    max-width: 400px;
+}
+
+.footer .input-group .form-control {
+    border-radius: 0;
+    border-right: none;
+}
+
+.footer .input-group .btn {
+    border-radius: 0;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.footer .input-group .btn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.footer .social-icons {
+    margin-top: 1.5rem;
+}
+
+.footer .social-icons a {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+}
+
+.footer .social-icons a:hover {
+    color: #007bff;
+}
+
+.footer .text-muted {
+    color: #ccc !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    .hero-content h3 {
+        font-size: 1.5rem;
+    }
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+    .hero-content {
+        margin-bottom: 2rem;
+    }
+    .hero-bg {
+        height: 250px;
+    }
+    .features-section .row {
+        text-align: center;
+    }
+    .category-section .section-title,
+    .trending-section .section-title,
+    .promo-section .section-title,
+    .instagram-section .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    .hero-content h3 {
+        font-size: 1.25rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    .hero-bg {
+        height: 200px;
+    }
+    .navbar-nav .nav-link {
+        margin-left: 0.5rem;
+    }
+    .navbar-nav .nav-link .bi {
+        font-size: 1rem;
+    }
+}
