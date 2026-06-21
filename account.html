@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com; connect-src https://api.cloudinary.com https://*.firebaseio.com https://*.googleapis.com http://127.0.0.1:5500;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | S-LAB</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { background: #f4f5f7; font-family: 'Poppins', sans-serif; margin: 0; color: #333; }
+
+        /* --- RESPONSIVE LAYOUT --- */
+        .dashboard-wrapper { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { background: #fff; border-radius: 16px; padding: 30px 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); height: fit-content; }
+        
+        .profile-summary { text-align: center; margin-bottom: 30px; }
+        .avatar-wrapper { position: relative; width: 90px; height: 90px; margin: 0 auto 15px; }
+        .avatar-circle { width: 100%; height: 100%; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 600; overflow: hidden; }
+        .cam-icon { position: absolute; bottom: 0; right: 0; background: #fff; color: #000; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; transition: 0.2s; }
+        .cam-icon:hover { background: #f0f0f0; }
+        .user-text h2 { margin: 0; font-size: 20px; font-weight: 700; color: #000; }
+        .user-text p { margin: 2px 0 0; font-size: 14px; color: #888; }
+
+        .menu-list { list-style: none; padding: 0; margin: 0; }
+        .menu-list li { display: flex; align-items: center; padding: 15px 20px; margin-bottom: 5px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .menu-list li:hover, .menu-list li.active { background: #f8f9fa; }
+        .menu-icon { width: 35px; color: #555; font-size: 18px; }
+        .menu-title { flex: 1; font-size: 15px; font-weight: 500; }
+        .menu-arrow { color: #ccc; font-size: 12px; }
+        
+        .text-red { color: #f03e3e !important; }
+        .icon-red { color: #f03e3e !important; }
+
+        /* --- MAIN CONTENT AREA --- */
+        .content-area { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); overflow: hidden; min-height: 500px; }
+
+        .screen { display: none; flex-direction: column; height: 100%; }
+        .screen.active { display: flex; }
+
+        .top-header { display: flex; justify-content: space-between; align-items: center; padding: 25px 30px; border-bottom: 1px solid #f0f0f0; }
+        .top-header h3 { margin: 0; font-size: 20px; color: #000; }
+        .icon-btn { cursor: pointer; background: none; border: none; font-size: 18px; color: #000; display: none; }
+        .btn-check { cursor: pointer; background: none; border: none; color: #22c55e; font-size: 20px; display: none; }
+
+        .section-body { padding: 30px; flex: 1; }
+
+        /* --- FORMS & CARDS --- */
+        .form-group { width: 100%; margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: #222; margin-bottom: 8px; }
+        .form-input { width: 100%; background: #f8f9fa; border: 1px solid #eee; padding: 16px; border-radius: 12px; font-size: 14px; font-family: inherit; box-sizing: border-box; outline: none; transition: 0.2s; }
+        .form-input:focus { border-color: #ccc; background: #fff; }
+        
+        .address-card { background: #f8f9fa; border: 1px solid #eee; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
+        .address-card h4 { margin: 0 0 8px 0; font-size: 16px; }
+        .address-card p { margin: 0; font-size: 14px; color: #666; line-height: 1.5; }
+
+        .btn-full-red { width: 100%; background: #f03e3e; color: #fff; border: none; padding: 16px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-full-red:hover { background: #d32f2f; }
+        .btn-save-desktop { background: #000; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+        .bottom-nav { display: none; }
+
+        /* --- MOBILE VIEW --- */
+        @media (max-width: 768px) {
+            .dashboard-wrapper { display: block; margin: 0; padding: 0; }
+            .sidebar { border-radius: 0; box-shadow: none; min-height: 100vh; padding: 0; padding-bottom: 80px; }
+            .sidebar-mobile-header { display: flex; justify-content: space-between; padding: 20px 25px; font-size: 18px; font-weight: 600; }
+            .profile-summary { display: flex; align-items: center; padding: 0 25px 20px; text-align: left; gap: 20px; margin: 0; }
+            .profile-summary .avatar-wrapper { margin: 0; width: 80px; height: 80px; }
+            .content-area { display: none; border-radius: 0; box-shadow: none; min-height: 100vh; }
+            .dashboard-wrapper.mobile-content-active .sidebar { display: none; }
+            .dashboard-wrapper.mobile-content-active .content-area { display: block; }
+            .top-header { padding: 20px 25px; }
+            .top-header h3 { font-size: 18px; }
+            .icon-btn, .btn-check { display: block; }
+            .btn-save-desktop { display: none; }
+            .bottom-nav { display: flex; justify-content: space-around; padding: 15px 0 20px; background: #fff; border-top: 1px solid #eee; position: fixed; bottom: 0; width: 100%; z-index: 10; }
+            .nav-item { color: #999; font-size: 22px; text-decoration: none; display: flex; flex-direction: column; align-items: center; }
+            .nav-item.active { color: #f03e3e; }
+        }
+
+        @media (min-width: 769px) { .sidebar-mobile-header { display: none; } }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <input type="file" id="uploadAvatar" accept="image/*" style="display: none;">
+
+    <div class="dashboard-wrapper" id="dashWrapper">
+
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-mobile-header">
+                <button class="icon-btn" style="display:block;" onclick="window.location.href='shop.html'"><i class="fa-solid fa-arrow-left"></i></button>
+                <span>My Profile</span>
+                <i class="fa-solid fa-gear"></i>
+            </div>
+
+            <div class="profile-summary">
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle" id="avatarLetterMain">?</div>
+                    <div class="cam-icon" onclick="triggerAvatarUpload()"><i class="fa-solid fa-camera"></i></div>
+                </div>
+                <div class="user-text">
+                    <h2 id="accName">Loading...</h2>
+                    <p id="accUsername">@username</p>
+                </div>
+            </div>
+
+            <ul class="menu-list">
+                <li onclick="navTo('screen-edit', this)" class="active">
+                    <div class="menu-icon"><i class="fa-regular fa-user"></i></div>
+                    <div class="menu-title">Edit Profile</div>
+                    <div class="menu-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </li>
+                <li onclick="navTo('screen-orders', this)">
+                    <div class="menu-icon"><i class="fa-solid fa-box"></i></div>
+                    <div class="menu-title">My Orders</div>
+                    <div class="menu-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </li>
+                <li onclick="navTo('screen-addresses', this)">
+                    <div class="menu-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="menu-title">Saved Addresses</div>
+                    <div class="menu-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </li>
+                <li onclick="resetPassword()">
+                    <div class="menu-icon"><i class="fa-solid fa-lock"></i></div>
+                    <div class="menu-title">Reset Password</div>
+                    <div class="menu-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+                </li>
+                <li onclick="logout()">
+                    <div class="menu-icon icon-red"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
+                    <div class="menu-title text-red">Log out</div>
+                </li>
+            </ul>
+
+            <div class="bottom-nav">
+                <a href="shop.html" class="nav-item"><i class="fa-solid fa-house"></i></a>
+                <a href="#" class="nav-item"><i class="fa-regular fa-comment"></i></a>
+                <a href="#" class="nav-item active"><i class="fa-regular fa-user"></i></a>
+            </div>
+        </div>
+
+        <div class="content-area" id="contentArea">
+            
+            <div id="screen-edit" class="screen active">
+                <div class="top-header">
+                    <button class="icon-btn" onclick="backToSidebar()"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h3>Edit Profile</h3>
+                    <button class="btn-save-desktop" onclick="updateUserProfile()">Save Changes</button>
+                    <button class="btn-check" onclick="updateUserProfile()"><i class="fa-solid fa-check"></i></button>
+                </div>
+                <div class="section-body">
+                    <div class="avatar-wrapper" style="margin: 0 auto 30px;">
+                        <div class="avatar-circle" id="avatarLetterEdit">?</div>
+                        <div class="cam-icon" onclick="triggerAvatarUpload()"><i class="fa-solid fa-camera"></i></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-input" id="editName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" class="form-input" id="editEmail" disabled placeholder="example@gmail.com" style="color: #999;">
+                    </div>
+                    <p id="profileMsg" style="text-align: center; font-size: 13px; color: green; font-weight: 600;"></p>
+                    <button class="btn-full-red" style="margin-top: 10px;" onclick="updateUserProfile()">Update Profile</button>
+                </div>
+            </div>
+
+            <div id="screen-addresses" class="screen">
+                <div class="top-header">
+                    <button class="icon-btn" onclick="backToSidebar()"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h3>My Addresses</h3>
+                    <div style="width: 20px;"></div> 
+                </div>
+                <div class="section-body">
+                    <div id="addressContainer">
+                        <p style="text-align: center; color: #777;">Loading your addresses...</p>
+                    </div>
+                    <button class="btn-full-red" onclick="navTo('screen-add-address')">+ Add New Address</button>
+                </div>
+            </div>
+
+            <div id="screen-add-address" class="screen">
+                <div class="top-header">
+                    <button class="icon-btn" onclick="navTo('screen-addresses')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h3>Add Address</h3>
+                    <button class="btn-check" onclick="saveNewAddress()"><i class="fa-solid fa-check"></i></button>
+                </div>
+                <div class="section-body">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-input" id="addrName" placeholder="Receiver's name">
+                    </div>
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" class="form-input" id="addrStreet" placeholder="e.g. MG Road, Flat 201">
+                    </div>
+                    <div style="display: flex; gap: 15px; width: 100%;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>City</label>
+                            <input type="text" class="form-input" id="addrCity" placeholder="City">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Pincode</label>
+                            <input type="number" class="form-input" id="addrPincode" placeholder="000000">
+                        </div>
+                    </div>
+                    <button class="btn-full-red" id="saveAddrBtn" onclick="saveNewAddress()">Save Address</button>
+                </div>
+            </div>
+
+            <div id="screen-orders" class="screen">
+                <div class="top-header">
+                    <button class="icon-btn" onclick="backToSidebar()"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h3>My Orders</h3>
+                    <div style="width: 20px;"></div>
+                </div>
+                <div class="section-body">
+                    <div id="ordersContainer" style="text-align: center; color: #777; padding-top: 50px;">
+                        <p>Loading your orders...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- 1. UI NAVIGATION LOGIC ---
+        function navTo(screenId, listItem = null) {
+            if(listItem) {
+                document.querySelectorAll('.menu-list li').forEach(el => el.classList.remove('active'));
+                listItem.classList.add('active');
+            }
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            if (window.innerWidth <= 768) {
+                document.getElementById('dashWrapper').classList.add('mobile-content-active');
+            }
+        }
+
+        function backToSidebar() {
+            document.getElementById('dashWrapper').classList.remove('mobile-content-active');
+        }
+
+        // --- 2. FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAAeCnftvLiKJcj04iFuv6OWovtnv_r2TE",
+            authDomain: "fir-lab-49901.firebaseapp.com",
+            projectId: "fir-lab-49901",
+            storageBucket: "fir-lab-49901.firebasestorage.app",
+            messagingSenderId: "145493212453",
+            appId: "1:145493212453:web:b93743eab8dde5c0beeecc",
+            measurementId: "G-J4KWKT4Z5L"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const db = firebase.firestore();
+
+        // --- 3. FETCH USER DATA (Orders & Addresses) ---
+        // --- 3. FETCH USER DATA (Orders & Addresses) ---
+        // Yahan 'userEmail' ki jagah 'userId' kar diya hai
+        function loadUserOrders(userId) {
+            const container = document.getElementById("ordersContainer");
+            // Security Fix: Database mein userId se search karo, email se nahi
+            db.collection("orders").where("userId", "==", userId).get().then((snapshot) => {
+                if (snapshot.empty) {
+                    container.innerHTML = `
+                        <i class="fa-solid fa-box-open" style="font-size: 50px; margin-bottom: 20px; color: #ddd;"></i>
+                        <p>No orders yet.<br>Your past and current orders will appear here.</p>
+                        <button class="btn-save-desktop" onclick="window.location.href='shop.html'" style="margin-top: 15px; background: #f03e3e;">Start Shopping</button>
+                    `;
+                    return;
+                }
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const order = doc.data();
+                    let itemsList = "";
+                    if (order.items && order.items.length > 0) {
+                        order.items.forEach(item => { itemsList += `<p style="margin:0; font-size:13px; color:#555;">• ${item.name} (Qty: ${item.quantity})</p>`; });
+                    }
+                    html += `
+                    <div class="address-card" style="margin-bottom: 20px; text-align: left;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <h4 style="margin:0;">Order #${doc.id.substring(0,6).toUpperCase()}</h4>
+                            <span style="background:#e0f7fa; color:#006064; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:bold;">${order.status || 'Pending'}</span>
+                        </div>
+                        <p style="margin-bottom:8px;"><strong>Total:</strong> ₹${order.total} (${order.paymentMethod || 'COD'})</p>
+                        <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #eee;">
+                            <p style="margin:0 0 5px 0; font-size:12px; font-weight:bold;">Items:</p>
+                            ${itemsList}
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            }).catch(err => {
+                console.error(err);
+                container.innerHTML = `<p style="color:red;">Error loading orders. Check console.</p>`;
+            });
+        }
+
+        function loadUserAddresses(userId) {
+            const container = document.getElementById("addressContainer");
+            db.collection("addresses").where("userId", "==", userId).get().then((snapshot) => {
+                if (snapshot.empty) {
+                    container.innerHTML = `<p style="text-align: center; color: #777; margin-bottom: 30px;">You haven't saved any addresses yet.</p>`;
+                    return;
+                }
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const adr = doc.data();
+                    html += `
+                    <div class="address-card">
+                        <h4>${adr.name}</h4>
+                        <p>${adr.street}<br>${adr.city} - ${adr.pincode}</p>
+                        <i class="fa-solid fa-trash text-red" onclick="deleteAddress('${doc.id}')" style="position:absolute; right:20px; top:20px; cursor:pointer;"></i>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            }).catch(err => container.innerHTML = `<p style="color:red;">Error loading addresses.</p>`);
+        }
+
+        // --- 4. AUTH STATE OBSERVER (Main Setup) ---
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                const displayName = user.displayName || "User";
+                const usernameRaw = user.email.split('@')[0];
+                
+                document.getElementById('accName').textContent = displayName;
+                document.getElementById('accUsername').textContent = "@" + usernameRaw;
+                document.getElementById('editName').value = displayName;
+                document.getElementById('editEmail').value = user.email;
+
+                updateAvatarUI(user.photoURL, displayName);
+                
+                // Fix: Email ki jagah user.uid pass kar rahe hain
+                loadUserOrders(user.uid);
+                loadUserAddresses(user.uid);
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // --- 5. ADDRESS LOGIC (Save & Delete) ---
+        function saveNewAddress() {
+            const user = firebase.auth().currentUser;
+            const name = document.getElementById('addrName').value;
+            const street = document.getElementById('addrStreet').value;
+            const city = document.getElementById('addrCity').value;
+            const pin = document.getElementById('addrPincode').value;
+            const btn = document.getElementById('saveAddrBtn');
+
+            if(!name || !street || !city || !pin) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            btn.textContent = "Saving...";
+            db.collection("addresses").add({
+                userId: user.uid,
+                name: name,
+                street: street,
+                city: city,
+                pincode: pin
+            }).then(() => {
+                // Clear form
+                document.getElementById('addrName').value = '';
+                document.getElementById('addrStreet').value = '';
+                document.getElementById('addrCity').value = '';
+                document.getElementById('addrPincode').value = '';
+                
+                btn.textContent = "Save Address";
+                navTo('screen-addresses');
+                loadUserAddresses(user.uid); // Refresh list
+            }).catch(error => {
+                alert("Error saving address: " + error.message);
+                btn.textContent = "Save Address";
+            });
+        }
+
+        function deleteAddress(docId) {
+            if(confirm("Are you sure you want to delete this address?")) {
+                db.collection("addresses").doc(docId).delete().then(() => {
+                    const user = firebase.auth().currentUser;
+                    loadUserAddresses(user.uid); // Refresh list
+                }).catch(err => alert("Error deleting: " + err.message));
+            }
+        }
+
+        // --- 6. PROFILE PHOTO UPLOAD (Using your Cloudinary setup) ---
+        function triggerAvatarUpload() {
+            document.getElementById('uploadAvatar').click();
+        }
+
+        document.getElementById('uploadAvatar').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const msgBox = document.getElementById('profileMsg');
+            msgBox.style.color = "orange";
+            msgBox.textContent = "Uploading photo... Please wait.";
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "slab_products"); // Your Cloudinary Preset
+
+            try {
+                const response = await fetch("https://api.cloudinary.com/v1_1/dtnrd4vwl/image/upload", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+                const photoURL = data.secure_url;
+
+                const user = firebase.auth().currentUser;
+                await user.updateProfile({ photoURL: photoURL });
+                
+                updateAvatarUI(photoURL, user.displayName);
+                msgBox.style.color = "green";
+                msgBox.textContent = "Photo updated successfully!";
+                setTimeout(() => msgBox.textContent = "", 3000);
+            } catch(error) {
+                msgBox.style.color = "red";
+                msgBox.textContent = "Failed to upload photo.";
+            }
+        });
+
+        function updateAvatarUI(photoURL, name) {
+            const mainAvatar = document.getElementById('avatarLetterMain');
+            const editAvatar = document.getElementById('avatarLetterEdit');
+            
+            if(photoURL) {
+                const imgTag = `<img src="${photoURL}" style="width:100%; height:100%; object-fit:cover;">`;
+                mainAvatar.innerHTML = imgTag;
+                editAvatar.innerHTML = imgTag;
+            } else {
+                const letter = name ? name.charAt(0).toUpperCase() : "?";
+                mainAvatar.textContent = letter;
+                editAvatar.textContent = letter;
+            }
+        }
+
+        // --- 7. FIREBASE AUTH ACTIONS ---
+        function updateUserProfile() {
+            const newName = document.getElementById('editName').value;
+            const user = firebase.auth().currentUser;
+            const msgBox = document.getElementById('profileMsg');
+
+            if (user && newName.trim() !== "") {
+                user.updateProfile({ displayName: newName }).then(() => {
+                    document.getElementById('accName').textContent = newName;
+                    updateAvatarUI(user.photoURL, newName);
+                    
+                    msgBox.style.color = "green";
+                    msgBox.textContent = "Profile Name Updated!";
+                    setTimeout(() => {
+                        msgBox.textContent = "";
+                        if (window.innerWidth <= 768) backToSidebar();
+                    }, 1500);
+                }).catch(error => {
+                    msgBox.style.color = "red";
+                    msgBox.textContent = "Error: " + error.message;
+                });
+            }
+        }
+
+        function resetPassword() {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                firebase.auth().sendPasswordResetEmail(user.email)
+                    .then(() => alert("Reset link sent to " + user.email + ". Check your inbox."))
+                    .catch((error) => alert("Error: " + error.message));
+            }
+        }
+
+        function logout() {
+            firebase.auth().signOut()
+                .then(() => window.location.href = "login.html")
+                .catch((error) => alert("Error logging out: " + error.message));
+        }
+    </script>
+</body>
+</html>

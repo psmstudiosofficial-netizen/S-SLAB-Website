@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com; connect-src https://*.firebaseio.com https://*.googleapis.com http://127.0.0.1:5500;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="cart.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <h1>Shopping Cart</h1>
+
+    <body>
+
+    <div class="cart-container">
+
+        <h1 class="cart-title">
+            Shopping Cart
+        </h1>
+
+        <div id="cartItems">
+
+            <!-- Cart items yahan JS se aayenge -->
+
+        </div>
+
+        <div class="cart-summary">
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span>Free</span>
+            </div>
+
+            <div class="summary-row">
+                <strong>Total</strong>
+                <strong id="grandTotal">₹0</strong>
+            </div>
+
+            <button class="checkout-btn" onclick="window.location.href='checkout.html'">
+    Proceed To Checkout
+</button>
+
+        </div>
+
+    </div>
+
+    <script src="cart.js"></script>
+
+</body>
+</body>
+</html>

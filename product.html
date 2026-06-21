@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com; connect-src https://*.firebaseio.com https://*.googleapis.com http://127.0.0.1:5500;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-LAB | Product</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Suisse+Intl:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="product.css">
+
+    <!-- Firebase v8 compat -->
+   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <!-- ===================== NAVBAR ===================== -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <button class="icon-btn" id="backBtn" onclick="history.back()" aria-label="Go back">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <a href="shop.html" class="nav-logo">S-LAB</a>
+            <button class="icon-btn cart-btn" onclick="window.location.href='cart.html'" aria-label="Cart">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span id="cartCount" class="cart-badge">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===================== MAIN LAYOUT ===================== -->
+    <main class="product-layout" id="productLayout">
+
+        <!-- LEFT: Image Gallery -->
+        <section class="gallery-section" style="position: relative;">
+            
+            <button class="slider-arrow prev-arrow" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(255, 255, 255, 0.8); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">❮</button>
+            <button class="slider-arrow next-arrow" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(255, 255, 255, 0.8); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">❯</button>
+
+            <div class="gallery-track" id="galleryTrack" style="scroll-behavior: smooth;">
+                <div class="gallery-placeholder" id="galleryPlaceholder">
+                    <div class="placeholder-shimmer"></div>
+                </div>
+            </div>
+            <div class="gallery-counter">
+                <span id="currentSlide">1</span>
+                <span class="counter-sep">/</span>
+                <span id="totalSlides">1</span>
+            </div>
+        </section>
+        <!-- RIGHT: Product Details -->
+        <section class="details-section" id="detailsSection">
+
+            <!-- Breadcrumb -->
+            <p class="breadcrumb"><a href="shop.html">Shop</a> / <span id="breadProduct">Loading…</span></p>
+
+            <!-- Title + Price -->
+            <div class="product-header">
+                <h1 class="product-title" id="productTitle">—</h1>
+                <div class="product-pricing">
+                    <span class="price-current" id="productPrice">—</span>
+                    <span class="price-mrp" id="productMrp"></span>
+                    <span class="discount-badge" id="discountBadge"></span>
+                </div>
+            </div>
+
+            <!-- Star Rating -->
+            <div class="rating-row">
+                <div class="stars">★★★★★</div>
+                <span class="rating-text">4.9 &mdash; 1 Review</span>
+            </div>
+
+            <!-- Highlights -->
+            <ul class="highlights" id="productHighlights">
+                <li>Heavyweight</li>
+                <li>Cropped Fit</li>
+                <li>Vintage Finish</li>
+            </ul>
+
+            <!-- Divider -->
+            <hr class="divider">
+
+            <!-- Size Selector -->
+            <div class="size-section">
+                <div class="size-header">
+                    <span class="size-label">SIZE</span>
+                    <a href="#" class="size-guide-link">SIZE GUIDE</a>
+                </div>
+                <div class="size-pills" id="sizePills">
+                    <!-- Pills injected by JS -->
+                </div>
+                <p class="size-error" id="sizeError">Please select a size to continue.</p>
+            </div>
+
+            <!-- Add to Cart — this is the anchor element for sticky bar visibility -->
+            <button class="btn-atc" id="mainAddToCart">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Add to Cart
+            </button>
+
+            <!-- Secondary action -->
+           <button class="btn-secondary" id="buyNowBtn" style="background: #000; color: #fff; border-color: #000;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+    Buy Now
+</button>
+            <!-- Accordions -->
+            <div class="accordions">
+
+                <div class="accordion" id="acc-details">
+                    <button class="accordion-trigger" aria-expanded="false" data-target="acc-details">
+                        <span>Product Details</span>
+                        <svg class="acc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="accordion-body" id="acc-details-body">
+                        <ul id="productDetailsContent">
+                            <li>100% heavyweight cotton — 280 GSM</li>
+                            <li>Washed & distressed for a vintage look</li>
+                            <li>Cropped boxy silhouette</li>
+                            <li>Ribbed crewneck collar</li>
+                            <li>Oversized dropped shoulders</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion" id="acc-wash">
+                    <button class="accordion-trigger" aria-expanded="false" data-target="acc-wash">
+                        <span>Washcare</span>
+                        <svg class="acc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="accordion-body" id="acc-wash-body">
+                        <ul>
+                            <li>Cold machine wash — 30°C max</li>
+                            <li>Do not bleach or tumble dry</li>
+                            <li>Iron on low heat, inside-out</li>
+                            <li>Dry flat to preserve shape</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion" id="acc-ship">
+                    <button class="accordion-trigger" aria-expanded="false" data-target="acc-ship">
+                        <span>Shipping</span>
+                        <svg class="acc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="accordion-body" id="acc-ship-body">
+                        <ul>
+                            <li>Free shipping on orders above ₹999</li>
+                            <li>Standard delivery: 5–7 business days</li>
+                            <li>Express delivery: 2–3 business days (₹99)</li>
+                            <li>COD available on select pincodes</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ===================== REVIEWS SECTION ===================== -->
+    <section class="reviews-section">
+        <div class="reviews-inner">
+            <div class="reviews-header">
+                <h2>Customer Reviews</h2>
+                <div class="reviews-meta">
+                    <span class="reviews-score">4.9</span>
+                    <div>
+                        <div class="stars">★★★★★</div>
+                        <p>Based on 1 review</p>
+                    </div>
+                </div>
+            </div>
+            <div class="review-list">
+                <article class="review-card">
+                    <div class="review-top">
+                        <div class="reviewer-avatar">R</div>
+                        <div>
+                            <p class="reviewer-name">Rohan K.</p>
+                            <p class="review-date">May 2025</p>
+                        </div>
+                        <span class="review-stars">★★★★★</span>
+                    </div>
+                    <p class="review-body">Honestly stunned by the quality. The wash is so good, feels like a vintage piece not mass produced. Sized up to M and it's the perfect boxy crop. Will buy again when next drop hits.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+    <section class="reviews-section">
+    </section>
+
+    <section class="related-products-section">
+        <div class="related-inner">
+            <h2 class="related-title">Complete The Look</h2>
+            <div class="related-grid" id="relatedProductsGrid">
+                </div>
+        </div>
+    </section>
+    <footer class="footer">
+        ...
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p class="footer-logo">S-LAB</p>
+            <p class="footer-copy">&copy; 2026 S-LAB. All rights reserved. &nbsp;&bull;&nbsp; <a href="#">Privacy</a> &nbsp;&bull;&nbsp; <a href="#">Terms</a></p>
+        </div>
+    </footer>
+
+    <!-- ===================== STICKY BOTTOM CART BAR ===================== -->
+    <div class="sticky-bar" id="stickyBar" aria-hidden="true">
+        <div class="sticky-bar-inner">
+            <img id="stickyThumb" src="" alt="" class="sticky-thumb">
+            <div class="sticky-info">
+                <p class="sticky-name" id="stickyName">Product Name</p>
+                <p class="sticky-size" id="stickySize">Size: —</p>
+            </div>
+            <span class="sticky-price" id="stickyPrice">—</span>
+            <button class="sticky-btn" id="stickyAddBtn" aria-label="Add to cart">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================== TOAST ===================== -->
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="product.js"></script>
+</body>
+</html>

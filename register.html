@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com; connect-src https://*.firebaseio.com https://*.googleapis.com http://127.0.0.1:5500;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S-LAB Register</title>
+<link rel="stylesheet" href="register.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>S-LAB REGISTER</h2>
+    <input type="text" id="fname" placeholder="First Name">
+    <input type="text" id="lname" placeholder="Last Name">
+    <input type="date" id="dob">
+    <input type="tel" id="mobile" placeholder="Mobile Number">
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="register()">Create Account</button>
+    <p id="msg"></p>
+    <br>
+    <a href="login.html">Already have account? Login</a>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAAeCnftvLiKJcj04iFuv6OWovtnv_r2TE",
+  authDomain: "fir-lab-49901.firebaseapp.com",
+  projectId: "fir-lab-49901",
+  storageBucket: "fir-lab-49901.firebasestorage.app",
+  messagingSenderId: "145493212453",
+  appId: "1:145493212453:web:b93743eab8dde5c0beeecc",
+  measurementId: "G-J4KWKT4Z5L"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.register = async function(){
+    const firstName = document.getElementById("fname").value.trim();
+    const lastName = document.getElementById("lname").value.trim();
+    const dob = document.getElementById("dob").value;
+    const mobile = document.getElementById("mobile").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const msg = document.getElementById("msg");
+
+    if(!firstName || !lastName || !dob || !mobile || !email || !password){
+        msg.style.color="red";
+        msg.innerText="Please fill all fields";
+        return;
+    }
+
+    try{
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db,"users",user.uid), {
+            firstName,
+            lastName,
+            dob,
+            mobile,
+            email,
+            createdAt:new Date().toISOString()
+        });
+
+        msg.style.color="lightgreen";
+        msg.innerText="Account Created Successfully ✔";
+        setTimeout(()=>{
+            window.location.href="login.html";
+        },2000);
+
+    } catch(error){
+        msg.style.color="red";
+        msg.innerText=error.message;
+    }
+}
+</script>
+
+</body>
+</html>

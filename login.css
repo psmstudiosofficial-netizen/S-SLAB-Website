@@ -1,0 +1,127 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+/* BACKGROUND */
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:url('https://images.unsplash.com/photo-1523398002811-999ca8dec234') center/cover no-repeat;
+}
+
+/* DARK OVERLAY */
+.overlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.65);
+}
+
+/* LOGIN BOX */
+.login-box{
+    position:relative;
+    z-index:2;
+    width:380px;
+    padding:40px;
+    background:rgba(0,0,0,0.75);
+    border-radius:20px;
+    backdrop-filter:blur(12px);
+    text-align:center;
+    color:white;
+    transition:0.3s ease;
+}
+
+.login-box:hover{
+    transform:translateY(-6px);
+    box-shadow:0 25px 50px rgba(0,0,0,0.7);
+}
+
+/* TITLE */
+.login-box h1{
+    letter-spacing:6px;
+    margin-bottom:20px;
+}
+
+/* INPUTS */
+.login-box input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+/* OPTIONS ROW */
+.options{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:12px;
+    margin:10px 0 15px;
+    color:#ccc;
+}
+
+/* CHECKBOX FIX */
+.options label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    cursor:pointer;
+}
+
+.options input[type="checkbox"]{
+    width:14px;
+    height:14px;
+    accent-color:white;
+}
+
+/* LINKS */
+.options a{
+    color:white;
+    text-decoration:none;
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:white;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    margin-top:10px;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+/* SIGNUP */
+.signup{
+    margin-top:15px;
+}
+
+.signup a{
+    color:white;
+    text-decoration:none;
+    font-size:13px;
+}
+#msg{
+margin-top:15px;
+font-size:14px;
+font-weight:600;
+min-height:20px;
+}
+
+.signup a{
+font-weight:bold;
+}

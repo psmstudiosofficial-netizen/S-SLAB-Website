@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.gstatic.com https://apis.google.com https://www.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com; connect-src https://api.cloudinary.com https://*.firebaseio.com https://*.googleapis.com http://127.0.0.1:5500;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-LAB | Premium Streetwear</title>
+    <link rel="stylesheet" href="shop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+<div id="mobile-menu-drawer" class="mobile-menu-drawer">
+    <div class="drawer-header">
+        <h2>MENU</h2>
+        <button id="close-menu-btn" class="icon-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    <ul class="drawer-links">
+        <li><a href="#" class="menu-link">Home</a></li>
+        <li><a href="#products" class="menu-link">Shop Collection</a></li>
+        <li><a href="account.html" class="menu-link">My Account</a></li>
+        <li><a href="cart.html" class="menu-link">Cart</a></li>
+    </ul>
+</div>
+    <div id="app">
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <button class="icon-btn menu-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line></svg>
+            </button>
+            <div class="logo">S-LAB</div>
+            <div class="nav-icons">
+                <button class="icon-btn" id="user-profile-btn" onclick="window.location.href='account.html'" style="padding: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer;">
+    <i class="fa-regular fa-user" style="font-size: 20px; color: #000;"></i>
+</button>
+                <button class="icon-btn cart-icon" onclick="window.location.href='cart.html'">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="home-bg section h-100vh" id="home">
+        <video class="bg-vid" autoplay loop muted playsinline>
+            <source src="assets/video/blackt.mp4" type="video/mp4">
+        </video>
+        <div class="bg-overlay"></div> 
+        <div class="container z-index">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+                    <div class="text-white text-center hero-text">
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="video-fade"></div>
+        <div class="scroll_down"> 
+            <a href="#products" class="scroll">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+            </a>
+        </div>
+    </section>
+
+    <section class="section-title-wrapper">
+        <div class="container">
+            <h1 class="collection-title">S-LAB Collection <span class="superscript">S-L</span></h1>
+            <p class="collection-subtitle"><strong>Limited pieces. Rare finishes.</strong></p>
+            <p class="collection-desc">Cropped tees to statement denim, Very Few Made.</p>
+        </div>
+    </section>
+
+    <section class="filter-bar">
+        <div class="container filter-container">
+            <div style="position: relative; width: 100%; max-width: 200px;">
+    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #888; font-size: 13px;"></i>
+    <input type="text" id="searchInput" placeholder="Search..." style="padding-left: 30px; width: 100%; box-sizing: border-box;">
+</div>
+            <div class="filter-dropdowns">
+                <select class="filter-dropdown" id="category-filter">
+                    <option value="">Category</option>
+                    <option value="tops">Tops</option>
+                    <option value="bottoms">Bottoms</option>
+                </select>
+                <select class="filter-dropdown" id="size-filter">
+                    <option value="">Size</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                </select>
+                <select class="filter-dropdown" id="sort-filter">
+                    <option value="featured">Sort</option>
+                    <option value="price-low">Low → High</option>
+                    <option value="price-high">High → Low</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <div class="products-header" style="display: none;">
+                <span id="productCount">0 Products</span>
+            </div>
+            <div id="loading-state" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading collection...</p>
+            </div>
+            <div id="products-grid" class="products-grid"></div>
+            <div id="empty-state" class="empty-state">
+                <h2>No Products Found</h2>
+                <p>Try another filter.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h2 class="footer-logo">S-LAB</h2>
+                    <p>Elevated streetwear for your best version. Limited pieces, rare finishes.</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="#products">All Products</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Outlaw Collection</a></li>
+                        <li><a href="#">Accessories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Track Order</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Join the lab. Get early access to drops.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Email Address" required>
+                        <button type="submit">→</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 S-LAB. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+    
+    <!-- QUICK ADD MODAL — single clean version -->
+    <div id="quick-add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal" class="close-modal">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+
+            <div class="modal-product-info">
+                <img id="modal-img" src="" alt="Product">
+                <div class="modal-details">
+                    <h3 id="modal-title">Product Name</h3>
+                    <p id="modal-price">Rs. 0.00</p>
+                </div>
+            </div>
+
+            <div class="modal-size-selector">
+                <p>Size</p>
+                <div class="size-pills" id="modal-sizes"></div>
+            </div>
+
+            <button id="modal-add-to-cart" class="btn-primary full-width">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Add to cart
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="shop.js"></script>
+</body>
+</html>
